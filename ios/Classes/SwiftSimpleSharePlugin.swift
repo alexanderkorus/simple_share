@@ -18,12 +18,12 @@ public class SwiftSimpleSharePlugin: NSObject, FlutterPlugin {
             let args = call.arguments as? [String: Any?]
             
             let title = args!["title"] as? String
-            //let message = args!["message"] as? String
+            let message = args!["msg"] as? String
             let fileUrl = args!["uri"] as? String
             
             var sharedItems : Array<Any> = Array()
             
-            //File url
+            // File url
             if let path = fileUrl, fileUrl != "" {
                 do {
                     let URLString: String = path
@@ -37,18 +37,20 @@ public class SwiftSimpleSharePlugin: NSObject, FlutterPlugin {
                                         details: nil))
                 }
                 
-            }else if let msg = args!["msg"] as? String, !msg.isEmpty {
-                sharedItems.append(msg)
-            }else{
+            } else {
                 result(FlutterError(code: "ERROR",
                                     message: "fileUrl is nil or empty",
                                     details: nil))
             }
             
+            // Message
+            if let msg = args!["msg"] as? String, !msg.isEmpty {
+                sharedItems.append(msg)
+            }
+            
             
             let activityViewController = UIActivityViewController(activityItems: sharedItems, applicationActivities: nil)
             
-            //            activityViewController.popoverPresentationController?.sourceView = self.viewController?.view // so that iPads won't crash
             
             if (title != nil && title != "") {
                 activityViewController.setValue(title, forKeyPath: "subject");
